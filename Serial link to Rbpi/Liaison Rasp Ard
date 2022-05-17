@@ -1,1 +1,24 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed May 11 21:47:34 2022
 
+@author: Erwan
+"""
+import csv
+import serial
+import time
+if __name__ == '__main__':
+    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=2) 
+    ser.reset_input_buffer()
+    with open('truccsv.csv', 'r') as f:
+        reader = csv.reader(f)
+        header = next(reader)
+        while True:
+            for row in reader:
+                X=row[0]
+                if int(X)<0:
+                    X="0"
+                ser.write(str(X).encode('utf-8'))
+                line = ser.readline().decode('utf-8').rstrip()
+                print("j'envoie",X,"vers arduino")
+                time.sleep(1) 
